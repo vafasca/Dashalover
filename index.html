@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy 6 Months Anniversary — Bruno</title>
+
+  <!-- Fuente bonita (opcional) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --pink-500:#ec4899;
+      --rose-500:#fb7185;
+      --purple-500:#8b5cf6;
+      --bg-from:#ffe4f0;
+      --bg-via:#ffeef6;
+      --bg-to:#f3e8ff;
+      --text-rose:#be185d;
+      --glass: rgba(255,255,255,0.8);
+      --card-blur: rgba(255,255,255,0.7);
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* Reset y utilidades básicas */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body,#root{height:100%}
+    body{
+      min-height:100vh;
+      background: linear-gradient(135deg, var(--bg-from), var(--bg-via), var(--bg-to));
+      overflow-x:hidden;
+      color:#2b2b2b;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* Flower background sutil */
+    .flower-pattern{
+      position:fixed;
+      inset:0;
+      opacity:0.06;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(236,72,153,0.28) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(219,39,119,0.28) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(244,114,182,0.25) 0%, transparent 40%);
+      pointer-events:none;
+      z-index:0;
+    }
+
+    /* Floating hearts */
+    .floating-heart{
+      position: absolute;
+      top: 110vh; /* empieza fuera abajo */
+      pointer-events:none;
+      width: 22px;
+      height: 22px;
+      opacity:0;
+      transform-origin:center;
+      animation: float-up 10s infinite linear;
+    }
+
+    @keyframes float-up{
+      0%{transform: translateY(0) rotate(0deg); opacity:0}
+      7%{opacity:1}
+      50%{opacity:1}
+      100%{transform: translateY(-130vh) rotate(360deg); opacity:0}
+    }
+
+    /* Gradient anim */
+    @keyframes gradient {
+      0%,100%{ background-position: 0% 50% }
+      50%{ background-position: 100% 50% }
+    }
+
+    /* Heart beat */
+    @keyframes heartbeat {
+      0%,100%{ transform: scale(1) }
+      25%{ transform: scale(1.08) }
+      50%{ transform: scale(1) }
+      75%{ transform: scale(1.12) }
+    }
+
+    /* Fade-in */
+    @keyframes fade-in {
+      from{ opacity:0; transform: translateY(-16px) }
+      to{ opacity:1; transform: translateY(0) }
+    }
+
+    /* Small animations utilities */
+    .animate-bounce{ animation: bounce 1s infinite; display:inline-block }
+    @keyframes bounce {
+      0%,100%{ transform: translateY(0) }
+      50%{ transform: translateY(-10px) }
+    }
+
+    .animate-pulse{ animation: pulse 1.6s infinite; display:inline-block }
+    @keyframes pulse {
+      0%{ transform: scale(1) }
+      50%{ transform: scale(1.06) }
+      100%{ transform: scale(1) }
+    }
+
+    .animate-heartbeat{ animation: heartbeat 1.4s infinite; display:inline-block }
+
+    /* Layout */
+    .centerer{ min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; z-index:10; padding:2rem; }
+    .text-center{ text-align:center }
+
+    /* Loading screen */
+    #loading{
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+      z-index:50; background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
+      overflow:hidden;
+    }
+    .loader-card{
+      text-align:center; z-index:60;
+    }
+    .spinner{
+      width:56px; height:56px; border-radius:50%;
+      border:5px solid rgba(255,255,255,0.6);
+      border-top-color: rgba(236,72,153,0.9);
+      animation: spin 1s linear infinite;
+      margin: 0.8rem auto 0;
+      box-shadow: 0 8px 30px rgba(139,92,246,0.08);
+    }
+    @keyframes spin{ to{ transform: rotate(360deg) } }
+
+    /* Main container */
+    .container{
+      max-width:1100px; margin:0 auto; padding:3rem 1rem; position:relative; z-index:10;
+    }
+
+    .card{
+      border-radius:24px; overflow:hidden; box-shadow: 0 18px 40px rgba(13,12,20,0.06); position:relative;
+    }
+
+    .hero-title{
+      font-weight:800;
+      font-size:2.8rem;
+      line-height:1.03;
+      background: linear-gradient(90deg,var(--pink-500),var(--rose-500),var(--purple-500));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      background-size:200% 200%;
+      animation: gradient 4s ease infinite;
+    }
+
+    .subdate{ color:var(--text-rose); font-weight:600; font-size:1.35rem; margin-top:0.6rem }
+
+    /* photo card */
+    .photo-card{
+      min-height:260px;
+      background-position:center;
+      background-size:cover;
+    }
+    .photo-overlay{
+      position:absolute; inset:0; background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9) 60%, rgba(255,255,255,0.75));
+      backdrop-filter: blur(4px);
+    }
+    .photo-content{ position:relative; padding:2rem; }
+
+    .text-block p{ margin-bottom:0.9rem; line-height:1.6; font-weight:500; font-size:1.05rem; color:#3b3b3b }
+
+    .accent{
+      font-weight:800; font-size:1.6rem;
+      background: linear-gradient(90deg,#ec4899,#8b5cf6);
+      -webkit-background-clip:text; color:transparent; margin-top:1rem; display:inline-block;
+    }
+
+    /* gallery */
+    .grid{ display:grid; gap:1rem; grid-template-columns: repeat(2, 1fr) }
+    .group{ position:relative; }
+    .group .card-inner{ position:relative; border-radius:16px; overflow:hidden; background:white; padding:0.6rem; box-shadow: 0 8px 24px rgba(16,16,26,0.06); transition:transform .35s ease }
+    .group:hover .card-inner{ transform: scale(1.03) }
+    .group .border-glow{ position:absolute; inset:-6px; border-radius:16px; filter:blur(18px); opacity:0.6; transition:opacity .6s }
+    .group:hover .border-glow{ opacity:1 }
+
+    /* last section */
+    .garden{ padding:2rem; text-align:center; border-radius:20px }
+    .garden .big{ font-size:3rem; font-weight:700; color:var(--text-rose) }
+
+    /* responsive */
+    @media (min-width:768px){
+      .hero-title{ font-size:4.4rem }
+      .text-block p{ font-size:1.12rem }
+      .spinner{ width:72px; height:72px; border-width:6px }
+    }
+
+    /* small helpers */
+    .hidden{ display:none !important }
+    .fade-up{ transform:translateY(0); opacity:1; transition: all .9s ease;}
+    .prehide{ transform:translateY(-18px); opacity:0 }
+  </style>
+</head>
+<body>
+
+  <!-- corazones flotantes (se llenan desde JS) -->
+  <div id="hearts-root" aria-hidden="true"></div>
+
+  <div class="flower-pattern" aria-hidden="true"></div>
+
+  <!-- Loading -->
+  <div id="loading">
+    <div class="loader-card">
+      <div style="margin-bottom:1rem; font-size:3.4rem;">
+        <span class="animate-bounce">🌸</span>
+        <span class="animate-bounce" style="animation-delay:0.18s">💕</span>
+        <span class="animate-bounce" style="animation-delay:0.36s">🌸</span>
+      </div>
+
+      <h1 style="font-size:1.9rem; margin-bottom:0.55rem; font-weight:800; color:transparent; background:linear-gradient(90deg,#ec4899,#8b5cf6); -webkit-background-clip:text;">
+        Добро пожаловать в прекрасный Эдем, Дашаландию... Бруно
+      </h1>
+
+      <div class="spinner" role="status" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <!-- App principal (oculto hasta que loading termine) -->
+  <main id="app" class="hidden">
+    <div class="container">
+
+      <div class="text-center" style="margin-bottom:2rem;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M12 2l1.176 3.643L17 7.2l-2.5 2.01L15.88 13 12 11.24 8.12 13l1.38-3.79L7 7.2l3.824-.557L12 2z" fill="#fb7185"/>
+          </svg>
+
+          <h1 class="hero-title">Happy 6 Months Anniversary</h1>
+
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M12 2l1.176 3.643L17 7.2l-2.5 2.01L15.88 13 12 11.24 8.12 13l1.38-3.79L7 7.2l3.824-.557L12 2z" fill="#fb7185"/>
+          </svg>
+        </div>
+
+        <p class="subdate">October 9th, 2025</p>
+
+        <div style="margin-top:1rem;">
+          <span class="animate-bounce" style="font-size:2.2rem; margin-right:.35rem">🌸</span>
+          <span class="animate-bounce" style="font-size:2.2rem; animation-delay:0.08s">💕</span>
+          <span class="animate-bounce" style="font-size:2.2rem; animation-delay:0.16s">🐱</span>
+          <span class="animate-bounce" style="font-size:2.2rem; animation-delay:0.24s">💕</span>
+          <span class="animate-bounce" style="font-size:2.2rem; animation-delay:0.32s">🌸</span>
+        </div>
+      </div>
+
+      <!-- Photo card -->
+      <div class="card photo-card" style="background-image:url('https://source.unsplash.com/1200x800/?couple,romance'); margin-bottom:1.6rem;">
+        <div class="photo-overlay"></div>
+        <div class="photo-content">
+          <h2 style="font-size:2rem; font-weight:800; color:var(--text-rose); display:flex; align-items:center; gap:.6rem;">
+            <span style="font-size:2.4rem">💖</span> My Beautiful Love
+          </h2>
+
+          <div class="text-block" style="margin-top:1rem; max-width:820px;">
+            <p>Полгода назад моя жизнь изменилась навсегда, когда я встретил тебя. Каждый день с тобой кажется прекрасным сном, наполненным любовью, смехом и бесконечным счастьем.</p>
+            <p>Ты мое солнце, мое вдохновение и все мое. Спасибо тебе за то, что ты самый удивительный человек в моей жизни. Я люблю твои ревность, твою манеру любить и показывать свою любовь. У меня не хватает слов, чтобы описать, насколько ты прекрасна для меня.</p>
+            <p>Я не уверен, что будет завтра, но я уверен, что хочу провести всю свою жизнь рядом с тобой.</p>
+            <p>Даша, ты любовь всей моей жизни. Я никогда раньше не чувствовал ничего подобного. Ты дополняешь меня во всем. Не знаю, закончу ли я когда-нибудь этот милый подарок... Я пытался нарисовать твой портрет, но вспомнил, что тебе это не очень нравится. Я вспомнил цветы, которые тебе нравятся, моя милая кошечка.</p>
+
+            <div class="accent">I Love You More Than Words Can Say! 💕</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gallery -->
+      <div style="margin-bottom:1.4rem;">
+        <h2 style="text-align:center; font-size:1.8rem; color:var(--text-rose); margin-bottom:1rem; font-weight:800; display:flex; align-items:center; justify-content:center; gap:.6rem">
+          <span style="font-size:1.6rem">💋</span>
+          Your Sweet Messages
+          <span style="font-size:1.6rem">💋</span>
+        </h2>
+
+        <div class="grid">
+          <div class="group">
+            <div class="border-glow" style="background: linear-gradient(90deg, rgba(251,113,133,0.8), rgba(236,72,153,0.8));"></div>
+            <div class="card-inner">
+              <!-- Imagen de ejemplo: reemplaza por /photo_2025-10-09_14-10-33.jpg -->
+              <img src="https://source.unsplash.com/800x600/?portrait,smile" alt="I love you" style="width:100%; display:block; border-radius:12px;"/>
+              <p style="text-align:center; margin-top:.8rem; font-size:1.15rem; font-weight:700; color:var(--text-rose)">"I love you" 💕</p>
+            </div>
+          </div>
+
+          <div class="group">
+            <div class="border-glow" style="background: linear-gradient(90deg, rgba(236,72,153,0.8), rgba(139,92,246,0.8));"></div>
+            <div class="card-inner">
+              <!-- Imagen de ejemplo: reemplaza por /photo_2025-10-09_14-10-41.jpg -->
+              <img src="https://source.unsplash.com/800x600/?couple,portrait" alt="For Bruno" style="width:100%; display:block; border-radius:12px;"/>
+              <p style="text-align:center; margin-top:.8rem; font-size:1.15rem; font-weight:700; color:var(--text-rose)">"For Bruno" 💖</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Garden -->
+      <div class="garden card" style="background: linear-gradient(135deg,#ffe6f0,#fff0fd); margin-bottom:2rem;">
+        <div style="padding:2rem;">
+          <h3 style="font-size:1.8rem; font-weight:800; color:var(--text-rose); margin-bottom:0.8rem">Our Beautiful Garden of Love</h3>
+          <div style="font-size:2.6rem; display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
+            <span class="animate-bounce">🪻</span>
+            <span class="animate-bounce" style="animation-delay:0.2s">🌺</span>
+            <span class="animate-bounce" style="animation-delay:0.4s">💮</span>
+            <span class="animate-bounce" style="animation-delay:0.6s">🌸</span>
+            <span class="animate-bounce" style="animation-delay:0.8s">🌷</span>
+          </div>
+          <p style="max-width:900px; margin:1rem auto 0; color:#7a2b50; font-size:1.05rem; line-height:1.6">
+            Как сирень весной, как лотосы, цветущие в воде, и как лилии, танцующие на ветру, наша любовь становится прекраснее с каждым днем, ты первая в моем мире, ты - солнце моего сада, моя кошечка.
+          </p>
+
+          <div style="margin-top:1.2rem; font-size:3.2rem; display:flex; align-items:center; justify-content:center; gap:1rem;">
+            <span class="animate-pulse">😻</span>
+            <span class="animate-heartbeat">💗</span>
+            <span class="animate-pulse">😻</span>
+          </div>
+
+          <p style="margin-top:1rem; font-size:1.5rem; font-weight:700; background:linear-gradient(90deg,#ec4899,#8b5cf6); -webkit-background-clip:text; color:transparent;">
+            Here's to forever with you, my love! 🌹
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // --- Configuración ---
+    const HEART_COUNT = 20;
+    const heartsRoot = document.getElementById('hearts-root');
+    const loadingEl = document.getElementById('loading');
+    const appEl = document.getElementById('app');
+
+    // Genera corazones con posiciones y delays aleatorios
+    function createHearts() {
+      const frag = document.createDocumentFragment();
+      for (let i=0;i<HEART_COUNT;i++){
+        const left = Math.random()*110 - 5; // puede empezar ligeramente fuera del borde
+        const delay = Math.random()*6; // segundos
+        const size = 14 + Math.floor(Math.random()*18);
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.style.left = left + 'vw';
+        heart.style.animationDelay = delay + 's';
+        heart.style.width = size + 'px';
+        heart.style.height = size + 'px';
+        // usar SVG corazón relleno
+        heart.innerHTML = `
+          <svg viewBox="0 0 24 24" width="${size}" height="${size}" aria-hidden="true">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#fb7185"/>
+          </svg>
+        `;
+        frag.appendChild(heart);
+      }
+      heartsRoot.appendChild(frag);
+    }
+
+    // Lógica de "carga" y despliegue del contenido principal
+    function start() {
+      createHearts();
+
+      // Simula delay de carga (como en tu useEffect original)
+      setTimeout(() => {
+        // Esconde loading y muestra app
+        loadingEl.classList.add('hidden');
+        appEl.classList.remove('hidden');
+
+        // Agrega clases para animar la aparición del contenido
+        // (pequeña espera para animación visual)
+        requestAnimationFrame(()=> {
+          document.querySelectorAll('#app .prehide').forEach(el => el.classList.add('fade-up'));
+        });
+      }, 3000);
+    }
+
+    // Inicia cuando DOM listo
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start);
+    } else {
+      start();
+    }
+
+    // Si quieres más corazones en pantalla principal (no solo en loading),
+    // ya se han creado en #hearts-root y flotarán por detrás del contenido.
+  </script>
+</body>
+</html>
