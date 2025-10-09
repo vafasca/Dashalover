@@ -187,8 +187,8 @@
     .photo-overlay{
       position:absolute; 
       inset:0; 
-      background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9) 60%, rgba(255,255,255,0.75));
-      backdrop-filter: blur(4px);
+      background: linear-gradient(90deg, rgba(255,255,255,0.85), rgba(255,255,255,0.8) 60%, rgba(255,255,255,0.7));
+      backdrop-filter: blur(2px);
     }
     .photo-content{ 
       position:relative; 
@@ -243,7 +243,147 @@
     }
     .group:hover .border-glow{ opacity:1 }
 
-    /* Carrusel Styles */
+    /* Secret Section */
+    .secret-section {
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+    
+    .secret-lock {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+    
+    .secret-lock:hover {
+      transform: scale(1.1);
+    }
+    
+    .secret-label {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-rose);
+      margin-bottom: 0.5rem;
+    }
+    
+    .secret-subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+    
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+    }
+    
+    .modal-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .modal-header h3 {
+      font-size: 1.8rem;
+      color: var(--text-rose);
+      margin-bottom: 0.5rem;
+    }
+    
+    .modal-body {
+      text-align: center;
+    }
+    
+    .modal-body p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    
+    .modal-cat {
+      font-size: 3rem;
+      margin: 1rem 0;
+    }
+    
+    .password-form {
+      margin-top: 1.5rem;
+    }
+    
+    .password-input {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 2px solid #e5e5e5;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    
+    .password-input:focus {
+      border-color: var(--pink-500);
+      outline: none;
+    }
+    
+    .password-submit {
+      background: linear-gradient(90deg, var(--pink-500), var(--rose-500));
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      width: 100%;
+    }
+    
+    .password-submit:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Carrusel Styles Mejorado */
     .carousel-section {
       margin: 2.5rem 0;
     }
@@ -465,7 +605,7 @@
         font-size: 4.4rem;
       }
       .carousel-slide {
-        min-width: 50%;
+        min-width: 100%;
       }
       .carousel-image {
         height: 550px;
@@ -482,6 +622,12 @@
   </style>
 </head>
 <body>
+
+  <!-- Audio para la canción de fondo -->
+  <audio id="background-music" loop>
+    <source src="cancion.mp3" type="audio/mpeg">
+    Tu navegador no soporta el elemento de audio.
+  </audio>
 
   <!-- corazones flotantes (se llenan desde JS) -->
   <div id="hearts-root" aria-hidden="true"></div>
@@ -552,6 +698,13 @@
         </div>
       </div>
 
+      <!-- Sección Secreta -->
+      <div class="secret-section">
+        <div class="secret-lock" id="secret-lock">🔒</div>
+        <div class="secret-label">Top Secret</div>
+        <div class="secret-subtitle">Haz clic en el candado para revelar un mensaje especial</div>
+      </div>
+
       <!-- Carrusel de Recuerdos -->
       <div class="carousel-section">
         <h2 class="carousel-title">
@@ -606,6 +759,16 @@
                 <div class="carousel-heart">😻</div>
               </div>
             </div>
+            
+            <!-- Nuevas slides agregadas -->
+            <div class="carousel-slide">
+              <img src="baby.png" alt="Special moment" class="carousel-image">
+              <div class="carousel-content">
+                <div class="carousel-message">My Two babies</div>
+                <div class="carousel-heart">💝</div>
+              </div>
+            </div>
+            
           </div>
           
           <button class="carousel-nav carousel-prev" aria-label="Previous slide">
@@ -627,6 +790,9 @@
           <button class="carousel-dot" aria-label="Go to slide 3"></button>
           <button class="carousel-dot" aria-label="Go to slide 4"></button>
           <button class="carousel-dot" aria-label="Go to slide 5"></button>
+          <button class="carousel-dot" aria-label="Go to slide 6"></button>
+          <button class="carousel-dot" aria-label="Go to slide 7"></button>
+          <button class="carousel-dot" aria-label="Go to slide 8"></button>
         </div>
       </div>
 
@@ -642,7 +808,6 @@
           <div class="group">
             <div class="border-glow" style="background: linear-gradient(90deg, rgba(251,113,133,0.8), rgba(236,72,153,0.8));"></div>
             <div class="card-inner">
-              <!-- Imagen de ejemplo: reemplaza por /photo_2025-10-09_14-10-33.jpg -->
               <img src="photo_2025-10-09_14-10-41.jpg" alt="I love you" style="width:100%; display:block; border-radius:12px;"/>
               <p style="text-align:center; margin-top:.8rem; font-size:1.1rem; font-weight:700; color:var(--text-rose)">"I love you" 💕</p>
             </div>
@@ -651,7 +816,6 @@
           <div class="group">
             <div class="border-glow" style="background: linear-gradient(90deg, rgba(236,72,153,0.8), rgba(139,92,246,0.8));"></div>
             <div class="card-inner">
-              <!-- Imagen de ejemplo: reemplaza por /photo_2025-10-09_14-10-41.jpg -->
               <img src="photo_2025-10-09_14-10-33.jpg" alt="For Bruno" style="width:100%; display:block; border-radius:12px;"/>
               <p style="text-align:center; margin-top:.8rem; font-size:1.1rem; font-weight:700; color:var(--text-rose)">"For Bruno" 💖</p>
             </div>
@@ -689,12 +853,54 @@
     </div>
   </main>
 
+  <!-- Modal para el mensaje secreto -->
+  <div class="modal-overlay" id="password-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="close-modal">×</button>
+      <div class="modal-header">
+        <h3>🔐 Top Secret</h3>
+        <p>Ingresa la contraseña especial</p>
+      </div>
+      <div class="modal-body">
+        <form class="password-form" id="password-form">
+          <input type="password" class="password-input" id="password-input" placeholder="Contraseña..." required>
+          <button type="submit" class="password-submit">Desbloquear Mensaje</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="secret-message-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="close-secret-modal">×</button>
+      <div class="modal-header">
+        <h3>💌 Mensaje Especial</h3>
+      </div>
+      <div class="modal-body">
+        <div class="modal-cat">😻</div>
+        <p>Mi querida Даша,</p>
+        <p>Este mensaje secreto es solo para ti, mi amor. Eres la persona más especial en mi vida y cada día a tu lado es un regalo.</p>
+        <p>Recuerda siempre que te amo más de lo que las palabras pueden expresar. Eres mi sol, mi luna y todas mis estrellas.</p>
+        <p>Con todo mi amor,<br><strong>Bruno</strong> 💕</p>
+        <div class="modal-cat">🐾</div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // --- Configuración ---
     const HEART_COUNT = 20;
     const heartsRoot = document.getElementById('hearts-root');
     const loadingEl = document.getElementById('loading');
     const appEl = document.getElementById('app');
+    const backgroundMusic = document.getElementById('background-music');
+    const secretLock = document.getElementById('secret-lock');
+    const passwordModal = document.getElementById('password-modal');
+    const secretMessageModal = document.getElementById('secret-message-modal');
+    const closeModal = document.getElementById('close-modal');
+    const closeSecretModal = document.getElementById('close-secret-modal');
+    const passwordForm = document.getElementById('password-form');
+    const passwordInput = document.getElementById('password-input');
 
     // Genera corazones con posiciones y delays aleatorios
     function createHearts() {
@@ -720,7 +926,7 @@
       heartsRoot.appendChild(frag);
     }
 
-    // Funcionalidad del carrusel
+    // Funcionalidad del carrusel mejorada
     function initCarousel() {
       const track = document.querySelector('.carousel-track');
       const slides = Array.from(track.children);
@@ -728,15 +934,13 @@
       const nextButton = document.querySelector('.carousel-next');
       const prevButton = document.querySelector('.carousel-prev');
       
-      // En pantallas grandes, mostrar dos slides a la vez
-      const slideWidth = window.innerWidth >= 1024 ? 50 : 100;
       let currentSlide = 0;
       
       // Posicionar slides
       const setSlidePosition = () => {
         slides.forEach((slide, index) => {
-          slide.style.minWidth = `${slideWidth}%`;
-          slide.style.left = `${slideWidth * index}%`;
+          slide.style.minWidth = '100%';
+          slide.style.left = `${100 * index}%`;
         });
       };
       
@@ -744,7 +948,7 @@
       
       // Mover al slide específico
       const moveToSlide = (slideIndex) => {
-        track.style.transform = `translateX(-${slideIndex * slideWidth}%)`;
+        track.style.transform = `translateX(-${slideIndex * 100}%)`;
         currentSlide = slideIndex;
         
         // Actualizar dots
@@ -755,12 +959,12 @@
       
       // Event listeners para botones
       nextButton.addEventListener('click', () => {
-        const nextSlide = currentSlide < slides.length - (window.innerWidth >= 1024 ? 2 : 1) ? currentSlide + 1 : 0;
+        const nextSlide = currentSlide < slides.length - 1 ? currentSlide + 1 : 0;
         moveToSlide(nextSlide);
       });
       
       prevButton.addEventListener('click', () => {
-        const prevSlide = currentSlide > 0 ? currentSlide - 1 : slides.length - (window.innerWidth >= 1024 ? 2 : 1);
+        const prevSlide = currentSlide > 0 ? currentSlide - 1 : slides.length - 1;
         moveToSlide(prevSlide);
       });
       
@@ -773,18 +977,60 @@
       
       // Auto-slide cada 5 segundos
       setInterval(() => {
-        const nextSlide = currentSlide < slides.length - (window.innerWidth >= 1024 ? 2 : 1) ? currentSlide + 1 : 0;
+        const nextSlide = currentSlide < slides.length - 1 ? currentSlide + 1 : 0;
         moveToSlide(nextSlide);
-      }, 10000);
+      }, 5000);
       
       // Recalcular en resize
       window.addEventListener('resize', () => {
-        const newSlideWidth = window.innerWidth >= 1024 ? 50 : 100;
-        slides.forEach((slide, index) => {
-          slide.style.minWidth = `${newSlideWidth}%`;
-          slide.style.left = `${newSlideWidth * index}%`;
-        });
+        setSlidePosition();
         moveToSlide(currentSlide);
+      });
+    }
+
+    // Funcionalidad de la sección secreta
+    function initSecretSection() {
+      // Mostrar modal de contraseña al hacer clic en el candado
+      secretLock.addEventListener('click', () => {
+        passwordModal.classList.add('active');
+      });
+      
+      // Cerrar modales
+      closeModal.addEventListener('click', () => {
+        passwordModal.classList.remove('active');
+      });
+      
+      closeSecretModal.addEventListener('click', () => {
+        secretMessageModal.classList.remove('active');
+      });
+      
+      // Cerrar modales al hacer clic fuera del contenido
+      passwordModal.addEventListener('click', (e) => {
+        if (e.target === passwordModal) {
+          passwordModal.classList.remove('active');
+        }
+      });
+      
+      secretMessageModal.addEventListener('click', (e) => {
+        if (e.target === secretMessageModal) {
+          secretMessageModal.classList.remove('active');
+        }
+      });
+      
+      // Manejar envío del formulario de contraseña
+      passwordForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const password = passwordInput.value.trim().toLowerCase();
+        
+        // Contraseña: "dasha" (puedes cambiarla)
+        if (password === 'dasha' || password === 'даша') {
+          passwordModal.classList.remove('active');
+          secretMessageModal.classList.add('active');
+          passwordInput.value = '';
+        } else {
+          alert('Contraseña incorrecta. Intenta con "Dasha" o "Даша"');
+          passwordInput.value = '';
+        }
       });
     }
 
@@ -805,7 +1051,21 @@
         
         // Inicializar carrusel
         initCarousel();
-      }, 10000);
+        
+        // Inicializar sección secreta
+        initSecretSection();
+        
+        // Intentar reproducir música de fondo
+        try {
+          backgroundMusic.volume = 0.3;
+          backgroundMusic.play().catch(e => {
+            console.log('La reproducción automática fue bloqueada:', e);
+            // Si la reproducción automática falla, podemos mostrar un botón para reproducir
+          });
+        } catch (e) {
+          console.log('Error al reproducir música:', e);
+        }
+      }, 3000);
     }
 
     // Inicia cuando DOM listo
