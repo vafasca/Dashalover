@@ -287,39 +287,54 @@
       height: 400px;
       object-fit: cover;
       display: block;
-      transition: transform 0.5s ease;
+      transition: all 0.5s ease;
     }
     
     .carousel-content {
       position: absolute;
-      bottom: 0;
+      top: 0;
       left: 0;
       right: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-      color: white;
+      bottom: 0;
+      background: linear-gradient(135deg, var(--bg-from), var(--bg-via), var(--bg-to));
+      color: var(--text-rose);
       padding: 2rem;
-      transform: translateY(100%);
-      transition: transform 0.5s ease;
-      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      border-radius: 16px;
     }
     
     .carousel-slide:hover .carousel-content {
-      transform: translateY(0);
+      opacity: 1;
     }
     
     .carousel-slide:hover .carousel-image {
+      opacity: 0;
       transform: scale(1.05);
     }
     
     .carousel-message {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.4;
     }
     
     .carousel-date {
-      font-size: 0.9rem;
-      opacity: 0.9;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--pink-500);
+      margin-bottom: 1.5rem;
+    }
+    
+    .carousel-heart {
+      font-size: 2.5rem;
+      animation: heartbeat 1.4s infinite;
     }
     
     .carousel-nav {
@@ -401,6 +416,9 @@
       .carousel-image {
         height: 450px;
       }
+      .carousel-message {
+        font-size: 1.5rem;
+      }
     }
 
     @media (min-width: 768px){
@@ -438,7 +456,7 @@
         height: 500px;
       }
       .carousel-message {
-        font-size: 1.4rem;
+        font-size: 1.7rem;
       }
     }
 
@@ -451,6 +469,9 @@
       }
       .carousel-image {
         height: 550px;
+      }
+      .carousel-message {
+        font-size: 1.8rem;
       }
     }
 
@@ -547,6 +568,7 @@
               <div class="carousel-content">
                 <div class="carousel-message">The day we first met - my life changed forever</div>
                 <div class="carousel-date">April 9th, 2025</div>
+                <div class="carousel-heart">💖</div>
               </div>
             </div>
             
@@ -556,6 +578,7 @@
               <div class="carousel-content">
                 <div class="carousel-message">Our first date - I knew you were the one</div>
                 <div class="carousel-date">April 15th, 2025</div>
+                <div class="carousel-heart">💕</div>
               </div>
             </div>
             
@@ -565,6 +588,7 @@
               <div class="carousel-content">
                 <div class="carousel-message">Our first trip together - so many beautiful memories</div>
                 <div class="carousel-date">June 2nd, 2025</div>
+                <div class="carousel-heart">🌸</div>
               </div>
             </div>
             
@@ -574,6 +598,7 @@
               <div class="carousel-content">
                 <div class="carousel-message">Our 3 months anniversary - my love grows stronger every day</div>
                 <div class="carousel-date">July 9th, 2025</div>
+                <div class="carousel-heart">💗</div>
               </div>
             </div>
             
@@ -583,6 +608,7 @@
               <div class="carousel-content">
                 <div class="carousel-message">Today - 6 months of pure happiness with you</div>
                 <div class="carousel-date">October 9th, 2025</div>
+                <div class="carousel-heart">😻</div>
               </div>
             </div>
           </div>
@@ -784,7 +810,7 @@
         
         // Inicializar carrusel
         initCarousel();
-      }, 3000);
+      }, 10000);
     }
 
     // Inicia cuando DOM listo
