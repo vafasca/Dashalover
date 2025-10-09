@@ -785,7 +785,7 @@
       setInterval(() => {
         const nextSlide = currentSlide < slides.length - (window.innerWidth >= 1024 ? 2 : 1) ? currentSlide + 1 : 0;
         moveToSlide(nextSlide);
-      }, 5000);
+      }, 10000);
       
       // Recalcular en resize
       window.addEventListener('resize', () => {
