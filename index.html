@@ -565,6 +565,57 @@
       color:var(--text-rose) 
     }
 
+    /* Audio Toggle Button */
+    .audio-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(90deg, var(--pink-500), var(--rose-500));
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      font-size: 1.5rem;
+    }
+
+    .audio-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .audio-toggle.muted {
+      background: linear-gradient(90deg, #9ca3af, #6b7280);
+    }
+
+    .audio-prompt {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      background: white;
+      padding: 10px 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      font-size: 0.9rem;
+      max-width: 200px;
+      text-align: center;
+      animation: fadeInOut 4s ease-in-out;
+      opacity: 0;
+    }
+
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0; transform: translateY(10px); }
+      20%, 80% { opacity: 1; transform: translateY(0); }
+    }
+
     /* Responsive improvements */
     @media (min-width: 480px) {
       .container {
@@ -646,10 +697,13 @@
 <body>
 
   <!-- Audio para la canción de fondo -->
-  <audio id="background-music" loop>
+  <audio id="background-music" loop preload="auto">
     <source src="cancion.mp3" type="audio/mpeg">
     Tu navegador no soporta el elemento de audio.
   </audio>
+
+  <!-- Botón para controlar el audio -->
+  <button class="audio-toggle" id="audio-toggle" title="Click para reproducir música">🔇</button>
 
   <!-- corazones flotantes (se llenan desde JS) -->
   <div id="hearts-root" aria-hidden="true"></div>
@@ -666,7 +720,7 @@
       </div>
 
       <h1 style="font-size:1.5rem; margin-bottom:0.55rem; font-weight:800; color:transparent; background:linear-gradient(90deg,#ec4899,#8b5cf6); -webkit-background-clip:text; line-height:1.3;">
-        Добро пожаловать в прекрасный Эдем, Дашаландию... Bruno
+        Добро пожаловать в прекрасный Эдем, Дашаландию... Бруно
       </h1>
 
       <div class="spinner" role="status" aria-hidden="true"></div>
@@ -958,6 +1012,7 @@
     const loadingEl = document.getElementById('loading');
     const appEl = document.getElementById('app');
     const backgroundMusic = document.getElementById('background-music');
+    const audioToggle = document.getElementById('audio-toggle');
     const secretLock = document.getElementById('secret-lock');
     const passwordModal = document.getElementById('password-modal');
     const secretMessageModal = document.getElementById('secret-message-modal');
@@ -965,6 +1020,74 @@
     const closeSecretModal = document.getElementById('close-secret-modal');
     const passwordForm = document.getElementById('password-form');
     const passwordInput = document.getElementById('password-input');
+
+    // Estado del audio
+    let isAudioPlaying = false;
+
+    // Función para controlar el audio
+    function setupAudio() {
+      // Configurar el volumen
+      backgroundMusic.volume = 0.3;
+      
+      // Event listener para el botón de audio
+      audioToggle.addEventListener('click', function() {
+        if (isAudioPlaying) {
+          backgroundMusic.pause();
+          audioToggle.innerHTML = '🔇';
+          audioToggle.classList.add('muted');
+          isAudioPlaying = false;
+        } else {
+          // Intentar reproducir
+          backgroundMusic.play().then(() => {
+            audioToggle.innerHTML = '🔊';
+            audioToggle.classList.remove('muted');
+            isAudioPlaying = true;
+          }).catch(error => {
+            console.log('Error al reproducir audio:', error);
+            // Mostrar mensaje para que el usuario interactúe
+            showAudioPrompt();
+          });
+        }
+      });
+
+      // Intentar reproducción automática después de la interacción del usuario
+      document.addEventListener('click', function firstInteraction() {
+        if (!isAudioPlaying) {
+          backgroundMusic.play().then(() => {
+            audioToggle.innerHTML = '🔊';
+            audioToggle.classList.remove('muted');
+            isAudioPlaying = true;
+          }).catch(error => {
+            console.log('Reproducción automática bloqueada');
+          });
+        }
+        // Remover el event listener después de la primera interacción
+        document.removeEventListener('click', firstInteraction);
+      });
+
+      // Manejar cuando el audio termina
+      backgroundMusic.addEventListener('ended', function() {
+        backgroundMusic.currentTime = 0;
+        backgroundMusic.play();
+      });
+    }
+
+    // Función para mostrar prompt de audio
+    function showAudioPrompt() {
+      const prompt = document.createElement('div');
+      prompt.className = 'audio-prompt';
+      prompt.innerHTML = 'Click en el botón de audio para reproducir la música';
+      document.body.appendChild(prompt);
+      
+      // Activar la animación
+      setTimeout(() => {
+        prompt.style.animation = 'fadeInOut 4s ease-in-out';
+      }, 100);
+      
+      setTimeout(() => {
+        prompt.remove();
+      }, 4000);
+    }
 
     // Genera corazones con posiciones y delays aleatorios
     function createHearts() {
@@ -1092,7 +1215,7 @@
           secretMessageModal.classList.add('active');
           passwordInput.value = '';
         } else {
-          alert('Contraseña incorrecta. Intenta con "Dasha" o "Даша"');
+          alert('Contraseña incorrecta. Intenta con "sexybaby" o "prettyangel"');
           passwordInput.value = '';
         }
       });
@@ -1101,6 +1224,7 @@
     // Lógica de "carga" y despliegue del contenido principal
     function start() {
       createHearts();
+      setupAudio(); // Configurar el audio
 
       // Simula delay de carga
       setTimeout(() => {
@@ -1119,16 +1243,8 @@
         // Inicializar sección secreta
         initSecretSection();
         
-        // Intentar reproducir música de fondo
-        try {
-          backgroundMusic.volume = 0.3;
-          backgroundMusic.play().catch(e => {
-            console.log('La reproducción automática fue bloqueada:', e);
-            // Si la reproducción automática falla, podemos mostrar un botón para reproducir
-          });
-        } catch (e) {
-          console.log('Error al reproducir música:', e);
-        }
+        // Mostrar prompt de audio después de cargar
+        setTimeout(showAudioPrompt, 1000);
       }, 3000);
     }
 
